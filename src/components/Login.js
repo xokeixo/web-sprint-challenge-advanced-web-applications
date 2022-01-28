@@ -5,6 +5,10 @@ import { useHistory } from 'react-router-dom';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
 
+const initialUser = {
+    username: '',
+    password: ''
+}
 const Login = () => {
     const { push } = useHistory()
     const [ error, setError ] = useState('')
@@ -17,11 +21,14 @@ const Login = () => {
         e.preventDefault()
         axios.post('http://localhost:5000/api/login', credentials)
             .then(resp => {
+                setError('')
                 localStorage.setItem('token', resp.data.token)
+                localStorage.setItem('role', resp.data.role)
+                localStorage.setItem('username', resp.data.username)
                 push('/view')
             })
             .catch(err => {
-                console.log(err)
+                setError(err)
             })
     }
 
