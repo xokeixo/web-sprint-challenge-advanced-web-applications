@@ -5,36 +5,48 @@ import { useHistory } from 'react-router-dom';
 
 import axiosWithAuth from '../utils/axiosWithAuth';
 
-const initialUser = {
-    username: '',
-    password: ''
-}
 const Login = () => {
-    const { push } = useHistory()
-    const [ error, setError ] = useState('')
-    const [ credentials, setCredentials ] = useState({
+    const history = useHistory()
+    const [ login, setLogin ] = useState({
         username: '',
-        password: ''
+        password: '',
+        error: ''
     })
+
+    // const handleClick = (e) => {
+    //     e.preventDefault()
+    //     axios.post('http://localhost:5000/api/login', )
+    //         .then(resp => {
+    //             setError('')
+    //             localStorage.setItem('token', resp.data.token)
+    //             localStorage.setItem('role', resp.data.role)
+    //             localStorage.setItem('username', resp.data.username)
+    //             push('/view')
+    //         })
+    //         .catch(err => {
+    //             setError(err)
+    //         })
+    // }
 
     const handleClick = (e) => {
         e.preventDefault()
-        axios.post('http://localhost:5000/api/login', credentials)
+        axios
+            .post('http://localhost:5000/api/login', {
+            username: login.username,
+            password: login.password
+        })
             .then(resp => {
-                setError('')
                 localStorage.setItem('token', resp.data.token)
-                localStorage.setItem('role', resp.data.role)
-                localStorage.setItem('username', resp.data.username)
-                push('/view')
+                history.push('/view')
             })
             .catch(err => {
-                setError(err)
+                console.log(err)
             })
     }
 
     const handleChange = (e) => {
-        setCredentials({
-            ...credentials,
+        setLogin({
+            ...login,
             [e.target.name]:e.target.value
         })
     }
@@ -46,15 +58,15 @@ const Login = () => {
             <form>
                 <div>
                     <label>Username</label>
-                    <input id="username" name="username" onChange={handleChange}/>
+                    <input id="username" name="username" onChange={handleChange} value={login.username}/>
                 </div>
                 <div>
                     <label>Password</label>
-                    <input id="password" name="password" onChange={handleChange}/>
+                    <input id="password" name="password" onChange={handleChange} value={login.password}/>
                 </div>
                 <button id='submit' onClick={handleClick}>Login</button>
             </form>
-            <p id="error"></p>
+            <p id="error">{login.error}</p>
         </ModalContainer>
     </ComponentContainer>);
 }

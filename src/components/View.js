@@ -20,7 +20,7 @@ const View = (props) => {
             .catch(err => {
                 console.log(err)
             })
-    })
+    }, [])
 
     const handleDelete = (id) => {
         axiosWithAuth()
@@ -36,10 +36,13 @@ const View = (props) => {
 
     const handleEdit = (article) => {
         axiosWithAuth()
-            .put(`/articles/${editId}`, article)
+            .put(`/articles/${article.id}`, article)
             .then(resp => {
                 setArticles(resp.data)
                 setEditing(false)
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
 
